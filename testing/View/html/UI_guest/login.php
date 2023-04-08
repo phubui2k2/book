@@ -17,7 +17,9 @@
 </head>
 <body>
     <?php
-        if (!isset($loginErr)) $loginErr='first';
+        if (!isset($loginErr))
+        $loginErr='first';
+        echo $loginErr;
     ?>
     <div class="container-fluid">
         <div class="row align-items-center py-3 pd_mobile">
@@ -112,7 +114,9 @@
                                         <div class="input-group">
                                             <input type="text" class="form-control mt-3" 
                                                     id="phonenumber" style="border-radius: 0; padding-left: 40px;" 
-                                                    placeholder="Enter your phone number">
+                                                    placeholder="Enter your phone number"
+                                                    name="phone"
+                                                    >
                                             <span class="input-group-addon" 
                                                     style="position: absolute; left: 15px; top: 23px;">
                                                     <i class="fa fa-phone text-success"></i>
@@ -141,7 +145,9 @@
                                         <div class="input-group">
                                             <input type="password" class="form-control mt-3" 
                                                     id="password" style="border-radius: 0; padding-left: 40px;"
-                                                    placeholder="Enter your password">
+                                                    placeholder="Enter your password"
+                                                    name="password"
+                                                    >
                                             <span class="input-group-addon" 
                                                     style="position: absolute; left: 15px; top: 23px;">
                                                     <i class="fa fa-lock text-success"></i>

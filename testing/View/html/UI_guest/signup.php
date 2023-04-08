@@ -143,7 +143,7 @@
                                                     <input type="tel" class="form-control mt-3" 
                                                             id="phonenumber" style="border-radius: 0; padding-left: 40px;" 
                                                             placeholder="Enter your phone number"
-                                                            name="phonenumber">
+                                                            name="phone">
                                                     <span class="input-group-addon" 
                                                             style="position: absolute; left: 15px; top: 23px;">
                                                             <i class="fa fa-phone text-success"></i>
@@ -234,12 +234,12 @@
                                                 </p>
                                             </div>
                                             <div class="form-group mt-3">
-                                                <label for="password" style="font-weight: 700;">XÁC NHẬN MẬT KHẨU</label>
+                                                <label for="password2" style="font-weight: 700;">XÁC NHẬN MẬT KHẨU</label>
                                                 <div class="input-group">
                                                     <input type="password" class="form-control mt-3" 
-                                                            id="password" style="border-radius: 0; padding-left: 40px;"
+                                                            id="password2" style="border-radius: 0; padding-left: 40px;"
                                                             placeholder="Enter your password"
-                                                            name="password">
+                                                            name="password2">
                                                     <span class="input-group-addon" 
                                                             style="position: absolute; left: 15px; top: 23px;">
                                                             <i class="fa fa-lock text-success"></i>

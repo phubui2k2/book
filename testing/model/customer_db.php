@@ -1,19 +1,39 @@
 <?php
     function checkLogin($phone, $password) {
         require('model/db.php');
-        if ($phone == '' && $password == '') return 'missingBoth';
-        if ($phone == '') return 'missingPhone';
-        if ($password == '') return 'missingPassword';
+        if (empty($phone)  && empty($password )) return 'missingBoth';
+        if (empty($phone) ) return 'missingPhone';
+        if (empty($password ) ) return 'missingPassword';
         //search for email in database
-        $searchPhone = "SELECT * FROM customers WHERE phone = '$phone'";
-        $resultPhone = mysqli_query($con, $searchPhone);
-        if (mysqli_num_rows($resultPhone) == 0) return "phoneErr";
-        $phoneObj = mysqli_fetch_object($resultPhone);
-        if ($phoneObj->password != $password) return "passwordErr";
-        session_start();
-        $_SESSION['phone'] = $_POST['phone'];
-        $_SESSION['name'] = $phoneObj->name;
-        return "good";
+        $sql = "SELECT * FROM customers WHERE phone = ?";
+        $stmt = mysqli_stmt_init($con);
+        if (!mysqli_stmt_prepare($stmt, $sql)) {
+            return false;
+        }
+        else {
+            mysqli_stmt_bind_param($stmt, "s",$phone );
+            mysqli_stmt_execute($stmt);
+
+            $result = mysqli_stmt_get_result($stmt);
+           
+
+            if ($row = mysqli_fetch_assoc($result)) {
+
+                $passwordCheck = password_verify($password, $row['password']);
+            
+                if  ($passwordCheck) {
+                    session_start();
+                    $_SESSION['phone'] = $row['phone'];
+                    $_SESSION['name'] = $row['name'];
+                   return true;
+
+                }
+                else return false;
+                
+            }
+        }
+        return true;
+      
     }
 
     function checkSignUp($firstName, $lastName,$phone, $email, $password, $password2) {
@@ -73,9 +93,23 @@
         //add customer to database
         require("model/db.php");
         $fullName = $firstName . ' ' . $lastName;
-        $addInfo = "INSERT INTO customers (name, password, email, phone)
-                    Value ('$fullName', '$password', '$email', '$phone')";
-        $result = mysqli_query($con, $addInfo);
+        $sql = "INSERT INTO customers (name, password, email, phone)
+                    Value (?, ? , ? , ?);";
+        $stmt = mysqli_stmt_init($con);
+        if(!mysqli_stmt_prepare($stmt,$sql)) {
+            // header("Location: 'index.php?controller=user&action=signup?error=sql'");
+            return false;
+        }
+        $hashedPassword = password_hash($password, PASSWORD_DEFAULT);
+        mysqli_stmt_bind_param($stmt, "ssss", $fullName, $hashedPassword , $email, $phone);
+        mysqli_stmt_execute($stmt);
+        mysqli_stmt_close($stmt);
+
+
+        // header("Location: index.php?controller=user&action=signup?signup=success");
+
+        return true;
+        //  $result = mysqli_query($con, $addInfo);
     }
     
     function getName($phone) {

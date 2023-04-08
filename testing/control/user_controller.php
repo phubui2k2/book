@@ -15,11 +15,11 @@
                 include_once('model/customer_db.php');
                 
                 //check login infomation, get login error
-                $checkLogin = checkLogin($_POST['phone'], $_POST['password']);
+                $isLogin = checkLogin($_POST['phone'], $_POST['password']);
 
                 //if login infomation not correct, redirect to login page with error code
-                if ($checkLogin!='good') {
-                    $data = array('loginErr' => $checkLogin);
+                if (!$isLogin) {
+                    $data = array('loginErr' =>'Login Failed!');
                     $this->render('View/html/UI_guest/login', $data);
                 }
                 //login infomation correct => go to home page for user
@@ -39,30 +39,42 @@
         function signup() {
             //include model
             include_once('model/customer_db.php');
-            if (isset($_POST['firstName']) && isset($_POST['lastName']) &&
+           
+            if (isset($_POST['firstname']) && isset($_POST['lastname']) &&
                 isset($_POST['phone']) && isset($_POST['email']) &&
                 isset($_POST['password']) && isset($_POST['password2'])){     
                     //get error code 
-                    $errArr = checkSignUp($_POST['firstName'], $_POST['lastName'],
+
+                    $errArr = checkSignUp($_POST['firstname'], $_POST['lastname'],
                                 $_POST['phone'], $_POST['email'], 
                                 $_POST['password'], $_POST['password2']);
+
                     extract($errArr);
                     //if all information are good=> start session
                     //save user info and go to home page for user
                     if($firstNameErr == 'good' && $lastNameErr == 'good' &&
                        $phoneErr == 'good' && $emailErr == 'good' && 
                        $passwordErr == 'good' && $password2Err == 'good') {
-                            addCustomer($_POST['firstName'], $_POST['lastName'],
+
+                         $result =    addCustomer($_POST['firstname'], $_POST['lastname'],
                                         $_POST['phone'], $_POST['email'], 
                                         $_POST['password']);
                             session_start();
                             $_SESSION['phone'] = $_POST['phone'];
+                        if($result) {
                             header("Location: index.php?controller=user&action=home_page_user");
+                        }
+                        else {
+                            $this->render('View/html/UI_guest/signup', $errArr);
+
+                        }
                        }
-                       //if have error, go back to signup page and display warning
-                    else $this->render('View/html/UI_guest/signup', $errArr);
+                    //    if have error, go back to signup page and display warning
+                    $this->render('View/html/UI_guest/signup', $errArr);
+
             }
             else {
+           
                 $errArr = array('firstNameErr' => 'first',
                 'lastNameErr' => 'first',
                 'phoneErr' => 'first',
@@ -91,7 +103,7 @@
 
         function logout() {
             //logout, destroy session and go to home page for guest
-            session_start();
+            // session_start();
             session_destroy();
             header("Location: index.php?controller=guest&action=home_page");
         }
