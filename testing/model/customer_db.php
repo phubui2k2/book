@@ -1,9 +1,21 @@
 <?php
     function checkLogin($phone, $password) {
         require('model/db.php');
-        if (empty($phone)  && empty($password )) return 'missingBoth';
-        if (empty($phone) ) return 'missingPhone';
-        if (empty($password ) ) return 'missingPassword';
+        $data = [];
+
+        if (empty($phone)  && empty($password )) {
+            $data['errors']['fields'] = "emptyfields";
+            return $data;
+        }
+        if (empty($phone) ) {
+            $data['errors']['phone'] = "emptyphone";
+            return $data;
+        }
+        if (empty($password) )  {
+            $data['errors']['password'] = "emptypassword";
+            return $data;
+            
+        }
         //search for email in database
         $sql = "SELECT * FROM customers WHERE phone = ?";
         $stmt = mysqli_stmt_init($con);
@@ -11,28 +23,40 @@
             return false;
         }
         else {
+           
             mysqli_stmt_bind_param($stmt, "s",$phone );
             mysqli_stmt_execute($stmt);
-
+           
             $result = mysqli_stmt_get_result($stmt);
            
-
-            if ($row = mysqli_fetch_assoc($result)) {
+           
+            if (!empty($row  = mysqli_fetch_assoc($result))) {
 
                 $passwordCheck = password_verify($password, $row['password']);
-            
+                
                 if  ($passwordCheck) {
                     session_start();
                     $_SESSION['phone'] = $row['phone'];
                     $_SESSION['name'] = $row['name'];
-                   return true;
+                    $data['status'] = "success";
+                //    return $result;
 
                 }
-                else return false;
+                else {
+                    $data['errors']['password'] = "wrongpassword";
+                    // return $result;
+                }
                 
             }
+            else {
+                $data['errors']['phone'] = "unavailablephone";
+                // return $result;
+            };
         }
-        return true;
+    
+
+        return $data;
+
       
     }
 

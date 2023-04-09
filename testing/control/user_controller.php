@@ -15,12 +15,10 @@
                 include_once('model/customer_db.php');
                 
                 //check login infomation, get login error
-                $isLogin = checkLogin($_POST['phone'], $_POST['password']);
-
+                $result = checkLogin($_POST['phone'], $_POST['password']);
                 //if login infomation not correct, redirect to login page with error code
-                if (!$isLogin) {
-                    $data = array('loginErr' =>'Login Failed!');
-                    $this->render('View/html/UI_guest/login', $data);
+                if (!empty($result['errors'] )) {
+                    $this->render('View/html/UI_guest/login',$result );
                 }
                 //login infomation correct => go to home page for user
                 else {

@@ -17,9 +17,10 @@
 </head>
 <body>
     <?php
-        if (!isset($loginErr))
-        $loginErr='first';
-        echo $loginErr;
+        if (!isset($errors) )
+         {
+            $errors  = "";
+         }
     ?>
     <div class="container-fluid">
         <div class="row align-items-center py-3 pd_mobile">
@@ -108,6 +109,17 @@
                         <div class="frame_login">
                                 <h4 style="font-weight: 700;">LOGIN TO YOUR ACCOUNT</h4>
                                 <h6 class="mt-3 text-muted text-white" style="font-weight: 500;">Enter your details to login</h6>
+                                <p class='text-danger'>
+                                <?php 
+                                     if(!empty($errors['fields'])) { 
+
+                                        echo 'Vui lòng nhập số điện thoại và password để đăng nhập!!!!!!';
+
+                                         
+                                    }
+                                    
+                                    ?>
+                                    </p>
                                 <form action="index.php?controller=user&action=login" method="post">
                                     <div class="form-group mt-5">
                                         <label for="phonenumber" style="font-weight: 700;">SỐ ĐIỆN THOẠI</label>
@@ -124,19 +136,18 @@
                                         </div>
                                         <p class='text-danger'>
                                             <?php
-                                                switch ($loginErr) {
-                                                    case "missingBoth":
+                                                if(!empty($errors['phone'])) {
+                                                switch ($errors['phone']) {
+                                                    case "emptyphone":
                                                         echo "Hãy nhập số điện thoại!";
                                                         break;
-                                                    case "missingPhone":
-                                                        echo "Hãy nhập số điện thoại!";
-                                                        break;
-                                                    case "phoneErr":
+                                                    case "unavailablephone":
                                                         echo "Số điện thoại chưa được đăng ký!";
                                                         break;
                                                     default: 
                                                         break;
                                                 }
+                                            }
                                             ?>
                                         </p>
                                       </div>                                  
@@ -157,19 +168,19 @@
                                     </div>
                                     <p class='text-danger'>
                                             <?php
-                                                switch ($loginErr) {
-                                                    case "missingBoth":
-                                                        echo "Hãy nhập mật khẩu!";
-                                                        break;
-                                                    case "missingPassword":
-                                                        echo "Hãy nhập mật khẩu!";
-                                                        break;
-                                                    case "passwordErr":
-                                                        echo "Mật khẩu không chính xác!";
-                                                        break;
-                                                    default: 
-                                                        break;
+                                                if(!empty($errors['password'])) {
+                                                    switch ($errors['password']) {
+                                                        case "emptypassword":
+                                                            echo "Hãy nhập mật khẩu!";
+                                                            break;
+                                                        case "wrongpassword":
+                                                            echo "Mật khẩu không chính xác!";
+                                                            break;
+                                                        default: 
+                                                            break;
+                                                    }
                                                 }
+                                               
                                             ?>
                                         </p>
                                     <button type="submit" class="btn btn-danger mt-4" 
