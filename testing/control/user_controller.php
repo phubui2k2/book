@@ -101,7 +101,9 @@
 
         function logout() {
             //logout, destroy session and go to home page for guest
-            // session_start();
+          
+            session_start();
+            session_unset();
             session_destroy();
             header("Location: index.php?controller=guest&action=home_page");
         }
